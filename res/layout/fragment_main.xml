@@ -9,8 +9,16 @@
     tools:context="com.trejo08.locscollector.MainActivity$PlaceholderFragment" >
 
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:text="@string/button_get_coords" />
 
 </RelativeLayout>

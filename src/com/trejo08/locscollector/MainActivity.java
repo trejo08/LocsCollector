@@ -1,18 +1,17 @@
 package com.trejo08.locscollector;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 
-// Packages for collect GPS choords
+// Packages for collect GPS coords
 import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.widget.Toast;
+
+// Package for make to vibrate device
+import android.os.Vibrator;
 
 public class MainActivity extends Activity {
 
@@ -20,49 +19,44 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
         
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        // initializing LocationManager
+        LocationManager location_manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        LocationListener location_listener = new CustomLocationListener();
+        
+        
+        location_manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, location_listener);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    
+    //Class for make a new coordinates    
+    public class CustomLocationListener implements LocationListener{
+    	// Public method for showing actual coordinates
+    	public void onLocationChanged(Location loc){
+    		loc.getLatitude();
+    		loc.getLongitude();
+    		String coordenadas = "Mis coordenadas son: Latitud = " + loc.getLatitude() + ", Longitud = " + loc.getLongitude();
+    		Toast.makeText(getApplicationContext(), coordenadas, Toast.LENGTH_LONG).show();
+    	}
+    	
+    	//Public
+    	public void onProviderDisabled(String provider){
+    		Toast.makeText(getApplicationContext(),"GPS Desactivado", Toast.LENGTH_SHORT).show();
+    	}
+    	
+    	public void onProviderEnabled(String provider){
+    		Toast.makeText( getApplicationContext(),"GPS Activo",Toast.LENGTH_SHORT).show();
+    	}
+    	
+    	
+    	public void onStatusChanged(String provider, int status, Bundle extras){}
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
-    }
-
+    
+    /*public class CustomStartVibration implements Vibrator {
+    	public void startVibrate(int loops){
+    		Vibrator v = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+    		v.vibrate(500);
+    	}
+    	public void onStatusChanged(String provider, int status, Bundle extras){}
+    	
+    }*/
 }
